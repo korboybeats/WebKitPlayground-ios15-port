@@ -1,0 +1,24 @@
+name: Validate iOS 15 WebKit Patch
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: macos-14
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Fetch WebKit source
+        run: |
+          git clone --depth 1 --branch releases/Apple/Safari-15-iOS-15.0 https://github.com/WebKit/WebKit.git WebKit-15.0
+
+      - name: Validate patch applies
+        run: |
+          git -C WebKit-15.0 apply --check ../ios15-port.patch
